@@ -19,8 +19,11 @@ local THEJ = false
 local EVENTERROR = true
 local GUIERROR = true
 
+local createsprintonstart = nil
 if game.Workspace:FindFirstChild("SprintCheck") then
-	local createsprintonstart = game.Workspace:FindFirstChild("SprintCheck").Value
+	createsprintonstart = game.Workspace:FindFirstChild("SprintCheck").Value
+else
+	createsprintonstart = false
 end
 
 local Functions = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Functions.lua"))()
