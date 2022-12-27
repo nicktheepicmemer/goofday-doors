@@ -19,7 +19,9 @@ local THEJ = false
 local EVENTERROR = true
 local GUIERROR = true
 
-local createsprintonstart = true
+if game.Workspace:FindFirstChild("SprintCheck") then
+	local createsprintonstart = game.Workspace:FindFirstChild("SprintCheck").Value
+end
 
 local Functions = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Functions.lua"))()
 
@@ -28,7 +30,7 @@ function createevents()
 		local ModEvents = game:GetObjects("rbxassetid://11910951647")[1]
 		ModEvents.Name = "ModEvents"
 		ModEvents.Parent = game.ReplicatedStorage
-		wait(2)
+		wait(1)
 		if game.ReplicatedStorage:FindFirstChild("ModEvents") then
 			print("Doomsday events loaded")
 			EVENTERROR = false
@@ -47,7 +49,7 @@ function creategui()
 		local MainUI = game:GetObjects("rbxassetid://11904519412")[1]
 		MainUI.Name = "DoomsDayUI"
 		MainUI.Parent = game.Players.LocalPlayer.PlayerGui
-		wait(3)
+		wait(1)
 		if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DoomsDayUI") then
 			print("Doomsday UI loaded")
 			GUIERROR = false
@@ -1030,7 +1032,7 @@ if not THEJ then
 			imag.Visible = false
 		elseif jumpscaretype == "him" then
 			for i,child in pairs (game.Players.LocalPlayer.PlayerGui:GetChildren()) do
-				if child.Name ~= "DoomsDayUI" and child.Name ~= "BubbleChat" and child.Name ~= "Chat" then
+				if child.Name ~= "DoomsDayUI" or child.Name ~= "BubbleChat" or child.Name ~= "Chat" or child.Name ~= "MainUI" or child.Name ~= "PermUI" then
 					child:Destroy()
 				end
 			end
