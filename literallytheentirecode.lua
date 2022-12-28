@@ -674,7 +674,7 @@ if not THEJ then
 		entityTable.Debug.OnDeath = function()
 			game.ReplicatedStorage.ModEvents.JumpscareEvent:Fire("Matcher")
 			local player = game.Players.LocalPlayer
-			if player.Character:GetAttribute("ForceOut") == true or player.Character:GetAttribute("HideSickness") and player.Character:GetAttribute("HideSickness") == true or player.Character:GetAttribute("HideSemiSickness") and player.Character:GetAttribute("HideSemiSickness") == true then
+			if player.Character:GetAttribute("ForceOut") and player.Character:GetAttribute("ForceOut") == true or player.Character:GetAttribute("HideSickness") and player.Character:GetAttribute("HideSickness") == true or player.Character:GetAttribute("HideSemiSickness") and player.Character:GetAttribute("HideSemiSickness") == true then
 				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to Matcher..", "It can appear at any time.", "So pay attention for cues that hint its arrival!"})
 			else
 				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"What a predicament...", "You died to Matcher, because you could hide..", "Remember, you only have to hide when Matcher is near!"})
@@ -1148,7 +1148,7 @@ if not THEJ then
 					getgenv().Title = "Nom"
 					getgenv().Description = "he he he haw.. gr... he he he haw.. gr... "
 					getgenv().Reason = "Survive These BALLLS YEAAAAAHHHHHHHHH i am so funny"
-					getgenv().BadgeId = 3942680660
+					getgenv().BadgeId = 2130136021
 					getgenv().Category = 69 --Im Very Funny
 
 					local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
