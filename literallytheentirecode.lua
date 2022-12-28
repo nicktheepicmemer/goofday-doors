@@ -1188,7 +1188,7 @@ if not THEJ then
 					getgenv().Title = "Boo!"
 					getgenv().Description = "Did I scare ya?"
 					getgenv().Reason = "Encounter Datura"
-					getgenv().BadgeId = 0
+					getgenv().BadgeId = 2130148606
 					getgenv().Category = 69 --Im Very Funny
 
 					local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
