@@ -19,11 +19,19 @@ local THEJ = false
 local EVENTERROR = true
 local GUIERROR = true
 
-local createsprintonstart = nil
+createsprintonstart = nil
+impossiblemode = nil
+
 if game.Workspace:FindFirstChild("SprintCheck") then
 	createsprintonstart = game.Workspace:FindFirstChild("SprintCheck").Value
 else
 	createsprintonstart = false
+end
+
+if game.Workspace:FindFirstChild("ImpossibleCheck") then
+	impossiblemode = game.Workspace:FindFirstChild("ImpossibleCheck").Value
+else
+	impossiblemode = false
 end
 
 local Functions = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Functions.lua"))()
@@ -306,16 +314,33 @@ if not THEJ then
 				--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Also credits to zavaled and nicorocks5555 for certain things...")
 				--wait(5)
 				if not game.Players.LocalPlayer.PlayerGui:FindFirstChild("StaminaGui") then
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Stamina Script Reccomended with doomsday btw")
+					if impossiblemode then
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Stamina Script Reccomended with doomsday btw")
+					else
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Stamina Script HEAVILY Reccomended with doomsday on impossible mode btw")
+						wait(2)
+					end
 					wait(4)
 				else
 					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Credits to Vynixu for sprint script")
 					wait(3)
 				end
 				if not thehard then
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun.")
+					if impossiblemode then
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun... :)")
+					else
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun.")
+					end
 				else
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun. (You really will not with hardcore and doomsday)")				
+					if impossiblemode then
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun. (You really will not with hardcore and doomsday)")				
+					else
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "you know what you have activated.")
+						wait(3)
+						--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "i'm going to tell you right now that this won't be fun.")
+						--wait(4)
+						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "suffering will ensue.")
+					end
 				end
 			else
 				if game.Workspace:FindFirstChild("hardcoreInit") then
@@ -528,7 +553,7 @@ if not THEJ then
 
 		entityTable.Debug.OnEntityDespawned = function()
 			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Mouth")
+				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Mouth", true)
 			end
 		end
 
@@ -625,7 +650,7 @@ if not THEJ then
 		entityTable.Debug.OnEntityDespawned = function()
 			game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value).Door.ClientOpen:FireServer()
 			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Matcher")
+				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Matcher", true)
 			end
 		end
 
@@ -726,7 +751,7 @@ if not THEJ then
 		entityTable.Debug.OnEntityDespawned = function()
 			game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value).Door.ClientOpen:FireServer()
 			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("A200")
+				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("A200", true)
 			end
 			EntityVars.A200Active = false
 			EntityVars.A200roomcooldown = 2
@@ -826,7 +851,7 @@ if not THEJ then
 			TweenService:Create(Claim.Attachment.PointLight2, TweenInfo.new(0.7, Enum.EasingStyle.Cubic, Enum.EasingDirection.In, 0, false), {Brightness = 0}):Play()
 			wait(2)
 			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Claim")
+				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Claim", true)
 			end
 			EntityVars.Claimroomcooldown = math.random(5,25)
 			EntityVars.ClaimSpawned = false
@@ -921,7 +946,7 @@ if not THEJ then
 			EntityVars.BlinkActive = false
 			BlinkMain:SetAttribute("Use", false)
 			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Blink")
+				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Blink", true)
 			end
 			BlinkMain:Destroy()
 		end
@@ -944,7 +969,7 @@ if not THEJ then
 		wait(1.1)
 		DaturaMain:Destroy()
 		if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-			game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Datura")
+			game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Datura", true)
 		end
 	end)
 
@@ -986,19 +1011,19 @@ if not THEJ then
 						--print(part, "animate frame")
 						if child.Image == "rbxassetid://11883236766" then
 							child.Image = "rbxassetid://11883236637"
-							print("A200 : frame 2")
+							--print("A200 : frame 2")
 						elseif child.Image == "rbxassetid://11883236637" then
 							child.Image = "rbxassetid://11883236508"
-							print("A200 : frame 3")
+							--print("A200 : frame 3")
 						elseif child.Image == "rbxassetid://11883236508" then
 							child.Image = "rbxassetid://11883236402"
-							print("A200 : frame 4")
+							--print("A200 : frame 4")
 						elseif child.Image == "rbxassetid://11883236402" then
 							child.Image = "rbxassetid://11883236251"
-							print("A200 : frame 5")
+							--print("A200 : frame 5")
 						elseif child.Image == "rbxassetid://11883236251" then
 							child.Image = "rbxassetid://11883236766"
-							print("A200 : frame 1")
+							--print("A200 : frame 1")
 						end
 						--print(part, "animate frame complete")
 						wait(0.1)
@@ -1137,29 +1162,33 @@ if not THEJ then
 					end
 					Unlock(nil,"Join")
 				end
-			elseif the == "Nick" or the == "nick" or the == "Him" or the == "him" or the == "NICK" or the == "HIM" then
-				getgenv().Title = "something"
-				getgenv().Description = "is"
-				getgenv().Reason = "here"
-				getgenv().BadgeId = 2130136234
-				getgenv().Category = 69 --Im Very Funny
+			elseif the == "Ruin" or the == "ruin" then
+				if not AchievementVars.RuinAchievementAchieved then
+					AchievementVars.RuinAchievementAchieved = true
+					getgenv().Title = "In Ruins"
+					getgenv().Description = "😎😎😎😎"
+					getgenv().Reason = "Encounter Juan"
+					getgenv().BadgeId = 0
+					getgenv().Category = 69 --Im Very Funny
+
 					local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
-				local Achievements = debug.getupvalue(Unlock, 1)
-				for i,v in pairs(require(game:GetService("ReplicatedStorage").Achievements)) do
-					v.Title = getgenv().Title
-					v.Desc = getgenv().Description
-					v.Reason = getgenv().Reason
-					v.BadgeId = getgenv().BadgeId
-					v.Category = getgenv().Category
+					local Achievements = debug.getupvalue(Unlock, 1)
+					for i,v in pairs(require(game:GetService("ReplicatedStorage").Achievements)) do
+						v.Title = getgenv().Title
+						v.Desc = getgenv().Description
+						v.Reason = getgenv().Reason
+						v.BadgeId = getgenv().BadgeId
+						v.Category = getgenv().Category
+					end
+					Unlock(nil,"Join")
 				end
-				Unlock(nil,"Join")
-			elseif the == "Matcher" or the == "matcher" then
-				if not AchievementVars.MatcherAchievementAchieved then
-					AchievementVars.MatcherAchievementAchieved = true
-					getgenv().Title = "No match for me!"
-					getgenv().Description = "Meet your Match."
-					getgenv().Reason = "Survive Matcher"
-					getgenv().BadgeId = 2128765393
+			elseif the == "Datura" or the == "datura" then
+				if not AchievementVars.DaturaAchievementAchieved then
+					AchievementVars.DaturaAchievementAchieved = true
+					getgenv().Title = "Boo!"
+					getgenv().Description = "Did I scare ya?"
+					getgenv().Reason = "Encounter Datura"
+					getgenv().BadgeId = 0
 					getgenv().Category = 69 --Im Very Funny
 
 					local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
@@ -1213,6 +1242,78 @@ if not THEJ then
 					end
 					Unlock(nil,"Join")
 				end
+			elseif the == "Nick" or the == "nick" or the == "Him" or the == "him" or the == "NICK" or the == "HIM" then
+				getgenv().Title = "something"
+				getgenv().Description = "is"
+				getgenv().Reason = "here"
+				getgenv().BadgeId = 2130136234
+				getgenv().Category = 69 --Im Very Funny
+				local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
+				local Achievements = debug.getupvalue(Unlock, 1)
+				for i,v in pairs(require(game:GetService("ReplicatedStorage").Achievements)) do
+					v.Title = getgenv().Title
+					v.Desc = getgenv().Description
+					v.Reason = getgenv().Reason
+					v.BadgeId = getgenv().BadgeId
+					v.Category = getgenv().Category
+				end
+				Unlock(nil,"Join")
+			elseif the == "Claim" or the == "claim" then
+				if not AchievementVars.ClaimAchievementAchieved then
+					AchievementVars.ClaimAchievementAchieved = true
+					getgenv().Title = "In Sight"
+					getgenv().Description = "👁👁👁👁👀👀👀👁‍🗨👁‍🗨👀👀👁👁👁👁‍🗨👁‍🗨👁‍🗨👁‍🗨👀👀"
+					getgenv().Reason = "Encounter and Survive THE CLAIMER!!!!!!!!!!!!!!!!!!!!!"
+					getgenv().BadgeId = 2128765398
+					getgenv().Category = 69 --Im Very Funny
+
+					local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
+					local Achievements = debug.getupvalue(Unlock, 1)
+					for i,v in pairs(require(game:GetService("ReplicatedStorage").Achievements)) do
+						v.Title = getgenv().Title
+						v.Desc = getgenv().Description
+						v.Reason = getgenv().Reason
+						v.BadgeId = getgenv().BadgeId
+						v.Category = getgenv().Category
+					end
+					Unlock(nil,"Join")
+				end
+			elseif the == "Blink" or the == "blink" then
+				if not AchievementVars.BlinkAchievementAchieved then
+					AchievementVars.BlinkAchievementAchieved = true
+					getgenv().Title = "DigzIGNDIKKkSE0ji3"
+					getgenv().Description = "👁"
+					getgenv().Reason = "Survive Bing"
+					getgenv().BadgeId = 2130136234
+					getgenv().Category = 69 --Im Very Funny
+
+					local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
+					local Achievements = debug.getupvalue(Unlock, 1)
+					for i,v in pairs(require(game:GetService("ReplicatedStorage").Achievements)) do
+						v.Title = getgenv().Title
+						v.Desc = getgenv().Description
+						v.Reason = getgenv().Reason
+						v.BadgeId = getgenv().BadgeId
+						v.Category = getgenv().Category
+					end
+					Unlock(nil,"Join")
+				end
+			elseif the == "orang" then
+				getgenv().Title = "FORBIDDEN"
+				getgenv().Description = "Instruction #301130311"
+				getgenv().Reason = "||||||||||||||||"
+				getgenv().BadgeId = 2130136234
+				getgenv().Category = 69 --Im Very Funny
+				local Unlock = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Lobby.RemoteListener.Modules.AchievementUnlock)
+				local Achievements = debug.getupvalue(Unlock, 1)
+				for i,v in pairs(require(game:GetService("ReplicatedStorage").Achievements)) do
+					v.Title = getgenv().Title
+					v.Desc = getgenv().Description
+					v.Reason = getgenv().Reason
+					v.BadgeId = getgenv().BadgeId
+					v.Category = getgenv().Category
+				end
+				Unlock(nil,"Join")
 			end
 		end
 	end)
