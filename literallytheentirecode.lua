@@ -36,6 +36,14 @@ end
 
 local Functions = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Functions.lua"))()
 
+function HasDoomsDayUI()
+	if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DoomsDayUI") then
+		return true
+	else
+		return false
+	end
+end
+
 function createevents()
 	if not game.ReplicatedStorage:FindFirstChild("ModEvents") then
 		local ModEvents = game:GetObjects("rbxassetid://11910951647")[1]
@@ -56,12 +64,12 @@ function createevents()
 end
 
 function creategui()
-	if not game.Players.LocalPlayer.PlayerGui:FindFirstChild("DoomsDayUI") then
+	if not HasDoomsDayUI() then
 		local MainUI = game:GetObjects("rbxassetid://11904519412")[1]
 		MainUI.Name = "DoomsDayUI"
 		MainUI.Parent = game.Players.LocalPlayer.PlayerGui
 		wait(1)
-		if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DoomsDayUI") then
+		if HasDoomsDayUI() then
 			print("Doomsday UI loaded")
 			GUIERROR = false
 		else
@@ -180,8 +188,15 @@ function createsprint()
 		local Plr = Players.LocalPlayer
 		local Char = Plr.Character or Plr.CharacterAdded:Wait()
 		local Hum = Char:WaitForChild("Humanoid")
-
-		local stamina, staminaMax = 100, 100
+		
+		local stamina, staminaMax = nil, nil
+		if impossiblemode then
+			staminaMax = 150
+			stamina = 150
+		else
+			staminaMax = 100
+			stamina = 100
+		end
 		local sprintTime = 7
 		local cooldown = false
 
@@ -214,7 +229,11 @@ function createsprint()
 				-- Sprinting
 
 				isSprinting = true
-				Hum:SetAttribute("SpeedBoost",4)
+				if impossiblemode then
+					Hum:SetAttribute("SpeedBoost", 5)
+				else
+					Hum:SetAttribute("SpeedBoost", 4)
+				end
 				zerostamtween:Play()
 				while UIS:IsKeyDown(Enum.KeyCode.Q) and stamina > 0 do
 					stamina = math.max(stamina - 1, 0)
@@ -226,7 +245,7 @@ function createsprint()
 				-- Reset
 				zerostamtween:Pause()
 				isSprinting = false
-				Hum:SetAttribute("SpeedBoost",0)
+				Hum:SetAttribute("SpeedBoost", 0)
 				game.TweenService:Create(ImageLabel,TweenInfo.new(1),{ImageTransparency = 1}):Play()
 				Hum.WalkSpeed = 12
 
@@ -267,7 +286,7 @@ function createsprint()
 				end        
 			end
 		end)
-		Hum:SetAttribute("SpeedBoost",0)
+		Hum:SetAttribute("SpeedBoost", 0)
 		Hum.WalkSpeed = 12
 
 	else
@@ -288,7 +307,7 @@ end
 
 if not THEJ then
 	if game.ReplicatedStorage.GameData.LatestRoom.Value > 0 then
-		game.ReplicatedStorage.GameStats["Player_" .. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+		game.ReplicatedStorage.GameStats["Player_" .. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Dementia"
 		firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"Execute the Doomsday script at Door 0 next time please"})
 		game.Players.LocalPlayer.Character.Humanoid.Health = 0
 	else if game.ReplicatedStorage.GameData.LatestRoom.Value == 0 then
@@ -356,6 +375,69 @@ if not THEJ then
 			end
 		end
 	end
+	
+	--variables
+	
+	local EntityVars = {
+		A200roomcooldown = 0,
+		A200Active = false,
+		BlinkActive = false,
+		BlinkMode = nil,
+		BlinkCanBlink = true,
+		BlinkCanKill = false,
+		BlinkKillDistance = 75,
+		Blinkroomcooldown = math.random(5,11),
+		ClaimSpawned = false,
+		ClaimClaiming = false,
+		ClaimKillDistance = 100,
+		Claimroomcooldown = 0,
+		DaturaNext = false,
+		RuinActive = false,
+		RuinLapsRemaining = 0,
+		Smileremaininggamespawns = 3,
+		Greenremaininggamespawns = 15,
+		MouthSpeedMultiplier = 1,
+		GreenSpeedMultiplier = 1,
+		ExploitSpeedMultiplier = 1,
+		SmileSpeedMultiplier= 1,
+		RuinSpeedMultiplier = 1,
+		A200SpeedMultiplier = 1,
+		MatcherSpeedMultiplier = 1,
+		BlinkLikelihoodMultiplier = 1
+	}
+
+	local AchievementVars = {
+		MouthAchievementAchieved = false,
+		GreenAchievementAchieved = false,
+		ExploitAchievementAchieved = false,
+		SmileAchievementAchieved = false,
+		RuinAchievementAchieved = false,
+		DaturaAchievementAchieved = false,
+		A200AchievementAchieved = false,
+		MatcherAchievementAchieved = false,
+		ClaimAchievementAchieved = false,
+		BlinkAchievementAchieved = false
+	}
+	
+	if impossiblemode then
+		EntityVars.MouthSpeedMultiplier = 2.5
+		EntityVars.GreenSpeedMultiplier = 2.5
+		EntityVars.ExploitSpeedMultiplier = 3.5
+		EntityVars.SmileSpeedMultiplier = 2
+		EntityVars.RuinSpeedMultiplier = 2.5
+		EntityVars.A200SpeedMultiplier = 2
+		EntityVars.MatcherSpeedMultiplier = 3
+		EntityVars.BlinkLikelihoodMultiplier = Random.new():NextNumber(0.5, 5)
+	else
+		EntityVars.MouthSpeedMultiplier = 1
+		EntityVars.GreenSpeedMultiplier = 1
+		EntityVars.ExploitSpeedMultiplier = 1
+		EntityVars.SmileSpeedMultiplier = 1
+		EntityVars.RuinSpeedMultiplier = 1
+		EntityVars.A200SpeedMultiplier = 1
+		EntityVars.MatcherSpeedMultiplier = 1
+		EntityVars.BlinkLikelihoodMultiplier = 1
+	end
 
 	--misc
 
@@ -382,39 +464,6 @@ if not THEJ then
 	end
 
 	--entities related stuff that aren't events !!
-
-	local EntityVars = {
-		A200roomcooldown = 0,
-		A200Active = false,
-		BlinkActive = false,
-		BlinkMode = nil,
-		BlinkCanBlink = true,
-		BlinkCanKill = false,
-		BlinkKillDistance = 75,
-		Blinkroomcooldown = math.random(5,11),
-		ClaimSpawned = false,
-		ClaimClaiming = false,
-		ClaimKillDistance = 100,
-		Claimroomcooldown = 0,
-		DaturaNext = false,
-		RuinActive = false,
-		RuinLapsRemaining = 0,
-		Smileremaininggamespawns = 3,
-		Greenremaininggamespawns = 15
-	}
-
-	local AchievementVars = {
-		MouthAchievementAchieved = false,
-		GreenAchievementAchieved = false,
-		ExploitAchievementAchieved = false,
-		SmileAchievementAchieved = false,
-		RuinAchievementAchieved = false,
-		DaturaAchievementAchieved = false,
-		A200AchievementAchieved = false,
-		MatcherAchievementAchieved = false,
-		ClaimAchievementAchieved = false,
-		BlinkAchievementAchieved = false
-	}
 
 	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors%20Entity%20Spawner/Source.lua"))()
 
@@ -497,7 +546,7 @@ if not THEJ then
 		local entityTable = Spawner.createEntity({
 			CustomName = "Mouth", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892852076", -- Can be GitHub file or rbxassetid
-			Speed = 135, -- Percentage, 100 = default Rush speed
+			Speed = 135 * EntityVars.MouthSpeedMultiplier, -- Percentage, 100 = default Rush speed
 			DelayTime = 0, -- Time before starting cycles (seconds)
 			HeightOffset = 0,
 			CanKill = true,
@@ -582,17 +631,128 @@ if not THEJ then
 
 		game.Players.LocalPlayer.PlayerGui.DoomsDayUI.Sounds.Ambience_Mouth:Play()
 
-		wait(2.7)
+		wait(2.5)
 
 		-- Run the created entity
 		Spawner.runEntity(entityTable)
 	end)
+	
+	game.ReplicatedStorage.ModEvents.GreenSpawn.Event:Connect(function()
+		task.wait(0.01)
+		EntityVars.Greenremaininggamespawns -= 1
+		for i,part in pairs (game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value):GetDescendants()) do
+			if part.Name == "LightFixture" then
+				for i,miniparts in pairs (part:GetDescendants()) do
+					if miniparts.Name == "Neon" then
+						if miniparts.Color == Color3.fromRGB(195, 161, 141) then
+							miniparts.Color = Color3.new(0, 1, 0)
+						elseif miniparts.Color == Color3.fromRGB(202, 191, 150) then
+							miniparts.Color = Color3.fromRGB(0, 125, 0)
+						end
+					end
+					if miniparts.ClassName == "PointLight" or miniparts.ClassName == "SpotLight" or miniparts.ClassName == "SurfaceLight" then
+						miniparts.Color = Color3.new(0, 1, 0)
+						miniparts.Brightness = 0.6
+					end
+				end
+			end
+		end
+		
+		local entityTable = Spawner.createEntity({
+			CustomName = "Green", -- Custom name of your entity
+			Model = "http://www.roblox.com/asset/?id=11892853479", -- Can be GitHub file or rbxassetid
+			Speed = 70 * EntityVars.GreenSpeedMultiplier, -- Percentage, 100 = default Rush speed
+			DelayTime = 0.5, -- Time before starting cycles (seconds)
+			HeightOffset = 0,
+			CanKill = true,
+			KillRange = 95.1,
+			BackwardsMovement = false,
+			BreakLights = false,
+			FlickerLights = {
+				false, -- Enabled/Disabled
+				0, -- Time (seconds)
+			},
+			Cycles = {
+				Min = 1,
+				Max = 1,
+				WaitTime = 0,
+			},
+			CamShake = {
+				true, -- Enabled/Disabled
+				{1.5, 15, 0.875, 0.875}, -- Shake values (don't change if you don't know)
+				150, -- Shake start distance (from Entity to you)
+			},
+			Jumpscare = {
+				false, -- Enabled/Disabled
+				{
+					Image1 = "rbxassetid://10483855823", -- Image1 url
+					Image2 = "rbxassetid://10483999903", -- Image2 url
+					Shake = true,
+					Sound1 = {
+						10483790459, -- SoundId
+						{ Volume = 0.5 }, -- Sound properties
+					},
+					Sound2 = {
+						10483837590, -- SoundId
+						{ Volume = 0.5 }, -- Sound properties
+					},
+					Flashing = {
+						true, -- Enabled/Disabled
+						Color3.fromRGB(255, 255, 255), -- Color
+					},
+					Tease = {
+						true, -- Enabled/Disabled
+						Min = 1,
+						Max = 3,
+					},
+				},
+			},
+			CustomDialog = {"You died to Green...", "Pay attention to the light colors in the room you are in.", "When they turn green, that is his cue.", "You will need to hide!"}, -- Custom death message
+		})
 
+
+		-----[[  Debug -=- Advanced  ]]-----
+		entityTable.Debug.OnEntitySpawned = function()
+		end
+
+		entityTable.Debug.OnEntityDespawned = function()
+			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
+				game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Green", true)
+			end
+		end
+
+		entityTable.Debug.OnEntityStartMoving = function()
+		end
+
+		entityTable.Debug.OnEntityFinishedRebound = function()
+		end
+
+		entityTable.Debug.OnEntityEnteredRoom = function(room)
+			--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
+			--print(CustomEntity, "reached room", room)
+			if room == game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value) then
+				local curroomvalue = game.ReplicatedStorage.GameData.LatestRoom
+				local curroom = game.Workspace.CurrentRooms:FindFirstChild(curroomvalue.Value)
+				curroom.Door.ClientOpen:FireServer()
+			end
+		end
+
+		entityTable.Debug.OnLookAtEntity = function()
+		end
+
+		entityTable.Debug.OnDeath = function()
+		end
+		------------------------------------
+
+		-- Run the created entity
+		Spawner.runEntity(entityTable)
+	end)
+	
 	game.ReplicatedStorage.ModEvents.MatcherSpawn.Event:Connect(function()
 		local entityTable = Spawner.createEntity({
 			CustomName = "Matcher", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892532883", -- Can be GitHub file or rbxassetid
-			Speed = 123.5, -- Percentage, 100 = default Rush speed
+			Speed = 123.5 * EntityVars.MatcherSpeedMultiplier, -- Percentage, 100 = default Rush speed
 			DelayTime = 0.1, -- Time before starting cycles (seconds)
 			HeightOffset = 0,
 			CanKill = true,
@@ -691,7 +851,7 @@ if not THEJ then
 		local entityTable = Spawner.createEntity({
 			CustomName = "A-200", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892860347", -- Can be GitHub file or rbxassetid
-			Speed = 275, -- Percentage, 100 = default Rush speed
+			Speed = 275 * EntityVars.A200SpeedMultiplier, -- Percentage, 100 = default Rush speed
 			DelayTime = 3.5, -- Time before starting cycles (seconds)
 			HeightOffset = 0,
 			CanKill = true,
@@ -911,11 +1071,15 @@ if not THEJ then
 							Blink.Attachment.ClosedParticle.Enabled = false
 							Blink.Attachment.PointLightFar.Enabled = true
 						end
-						wait(1.078)
+						wait(0.65)
 						if EntityVars.BlinkMode == "open" then
 							EntityVars.BlinkCanKill = true
 						end
-						wait(math.random(1000, 2000) / 1000)
+						if impossiblemode then
+							wait(math.random(400, 600) / 1000)
+						else
+							wait(math.random(1000, 2000) / 1000)
+						end
 						EntityVars.BlinkCanBlink = true
 					end
 				end)
@@ -931,7 +1095,7 @@ if not THEJ then
 				local speedrando = math.random(50, 500) / 100
 				Blink:FindFirstChild("Whisper").PlaybackSpeed = speedrando
 				firesignal(game.ReplicatedStorage.Bricks.CamShakeRelative.OnClientEvent, Blink.Position, 0.875, 8.9, 0, 1, Vector3.new(0.025,0.065,0.025))
-				local possibleblinkchance = math.random(1,math.random(math.random(4, 5), math.random(6, 7)))
+				local possibleblinkchance = math.random(1,math.random(math.random(math.round(4 * (EntityVars.BlinkLikelihoodMultiplier / 10)), math.round(5 * (EntityVars.BlinkLikelihoodMultiplier / 10))), math.random(math.round(6 * (EntityVars.BlinkLikelihoodMultiplier / 10)), math.round(7 * (EntityVars.BlinkLikelihoodMultiplier / 10)))))
 				if possibleblinkchance == 1 then
 					Blink:FindFirstChild("ChangePhase"):Fire()
 				end
@@ -965,8 +1129,8 @@ if not THEJ then
 		Datura:FindFirstChild("SpawnSound"):Play()
 		TweenService:Create(Datura, TweenInfo.new(0.6, Enum.EasingStyle.Cubic, Enum.EasingDirection.In, 0, false), {CFrame = game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value - 1):FindFirstChild("Door").Hidden.CFrame}):Play()
 		wait(0.6)
-		TweenService:Create(Datura, TweenInfo.new(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out, 0, false), {CFrame = Datura.CFrame * CFrame.new(0, -50, 0)}):Play()
-		wait(1.1)
+		TweenService:Create(Datura, TweenInfo.new(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out, 0, false), {CFrame = Datura.CFrame * CFrame.new(0, -100, 0)}):Play()
+		wait(1)
 		DaturaMain:Destroy()
 		if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
 			game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Datura", true)
@@ -990,10 +1154,14 @@ if not THEJ then
 			local DaturaPossibility = math.random(1,60)
 			if DaturaPossibility == 1 then
 				EntityVars.DaturaNext = true
-				if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DoomsDayUI") then
+				if HasDoomsDayUI() then
 					game.Players.LocalPlayer.PlayerGui.DoomsDayUI.Sounds.Ambience_Datura:Play()
 				end
 			end
+		end
+		local mouthpossibility = math.random(1,math.random(9,13))
+		if mouthpossibility == 1 then
+			
 		end
 	end)
 
@@ -1136,10 +1304,14 @@ if not THEJ then
 
 	game.ReplicatedStorage.ModEvents.FakeAchievement.Event:Connect(function(the: string, needalive: boolean)
 		local canachievetheachievingachievement = nil
-		if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
-			canachievetheachievingachievement = true
+		if needalive then
+			if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
+				canachievetheachievingachievement = true
+			else
+				canachievetheachievingachievement = false
+			end
 		else
-			canachievetheachievingachievement = false
+			canachievetheachievingachievement = true
 		end
 		if canachievetheachievingachievement then
 			if the == "Mouth" or the == "mouth" then
@@ -1445,7 +1617,7 @@ if not THEJ then
 	end)
 
 	game.ReplicatedStorage.GameData.LatestRoom.Changed:Connect(function() --misc random events
-		wait(0.05)
+		wait(0.02)
 		if game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value):GetAttribute("OriginalName")
 			and game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value):GetAttribute("OriginalName") == "Hotel_MazeGate" then
 			local modularbookshelfDELETE = math.random(1,math.random(3,6))
@@ -1643,8 +1815,8 @@ if not THEJ then
 		--if EntityVars.A200Active then
 		if game.Workspace:FindFirstChild("A-200") then
 			for i,child in pairs (game.Workspace:GetChildren()) do
-				if child.Name == "A-200" and child["HappyScribble :D"]:FindFirstChild("animating").Value == false then
-					game.ReplicatedStorage.ModEvents.AnimationFrame:Fire(child["HappyScribble :D"], true)
+				if child.Name == "A-200" and child:GetChildren()[1]:FindFirstChild("animating").Value == false then
+					game.ReplicatedStorage.ModEvents.AnimationFrame:Fire(child:GetChildren()[1], true)
 				end
 			end
 		end
