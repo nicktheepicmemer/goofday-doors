@@ -1,5 +1,4 @@
 --[[
-
  __          ___             _   _            _    _ ______ _      _                                             _                   
  \ \        / / |           | | | |          | |  | |  ____| |    | |                                           | |                  
   \ \  /\  / /| |__  _   _  | |_| |__   ___  | |__| | |__  | |    | |        __ _ _ __ ___   _   _  ___  _   _  | |__   ___ _ __ ___ 
@@ -8,10 +7,7 @@
      \/  \/   |_| |_|\__, |  \__|_| |_|\___| |_|  |_|______|______|______|  \__,_|_|  \___|  \__, |\___/ \__,_| |_| |_|\___|_|  \___|
                       __/ |                                                                   __/ |                                  
                      |___/                                                                   |___/   
-
-
 LEAVE NOW UNLESS YOU'RE MYSELF 😡😡😡😡😡😡😡😡🤬🤬🤬🤬🤬🤬🤬🤬
-
 ]]
 
 local THEJ = false
@@ -188,7 +184,7 @@ function createsprint()
 		local Plr = Players.LocalPlayer
 		local Char = Plr.Character or Plr.CharacterAdded:Wait()
 		local Hum = Char:WaitForChild("Humanoid")
-		
+
 		local stamina, staminaMax = nil, nil
 		if impossiblemode then
 			staminaMax = 150
@@ -375,9 +371,9 @@ if not THEJ then
 			end
 		end
 	end
-	
+
 	--variables
-	
+
 	local EntityVars = {
 		A200roomcooldown = 0,
 		A200Active = false,
@@ -394,6 +390,10 @@ if not THEJ then
 		DaturaNext = false,
 		RuinActive = false,
 		RuinLapsRemaining = 0,
+		Ruinroomcooldown = math.random(8,11),
+		TrickChanceMin = 1,
+		TrickChanceMax = 20,
+		TrickMaxPerRoom = 1,
 		Smileremaininggamespawns = 3,
 		Greenremaininggamespawns = 15,
 		MouthSpeedMultiplier = 1,
@@ -418,7 +418,7 @@ if not THEJ then
 		ClaimAchievementAchieved = false,
 		BlinkAchievementAchieved = false
 	}
-	
+
 	if impossiblemode then
 		EntityVars.MouthSpeedMultiplier = 2.5
 		EntityVars.GreenSpeedMultiplier = 2.5
@@ -466,7 +466,36 @@ if not THEJ then
 	--entities related stuff that aren't events !!
 
 	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors%20Entity%20Spawner/Source.lua"))()
+	
+	function breakclosets(room: number)
+		for i,part in pairs (game.Workspace.CurrentRooms:FindFirstChild(room).Assets:GetChildren()) do
+			if part.Name == "Wardrobe" then
+				part.HidePrompt:Destroy()
+				part.Door1:Destroy()
+				part.Door2:Destroy()
+				part.Main.CanCollide = false
+				part.Main.SoundEnter:Destroy()
+				part.Main.SoundExit:Destroy()
+				part.Main.Peek:Destroy()
 
+				local braekdoors = game:GetObjects("rbxassetid://12026933579")[1]
+				braekdoors.Parent = game.Workspace.CurrentRooms:FindFirstChild(room).Assets
+
+				braekdoors:PivotTo(part.Main.CFrame)
+				braekdoors.Door1.Anchored = false
+				braekdoors.Door1.Knob.Anchored = false
+				braekdoors.Door2.Anchored = false
+				braekdoors.Door2.Knob.Anchored = false
+				braekdoors.Door1.MaterialVariant = "PlywoodALT"
+				braekdoors.Door2.MaterialVariant = "PlywoodALT"
+				local random1 = math.random(1,3)
+				local random2 = math.random(1,3)
+				braekdoors.Door1:FindFirstChild(random1):Play()
+				braekdoors.Door2:FindFirstChild(random2):Play()
+			end
+		end
+	end
+	
 	function anyissues(normalcare: boolean, megacare: boolean, hardcorecheck: boolean)
 		local heyman = false
 		if normalcare then
@@ -521,18 +550,13 @@ if not THEJ then
 			["Datura"] = 1,
 		}
 		local b = 0
-
 		for _, Chance in pairs(entitytable) do
 			b += (Chance * 10)
 		end
-
 		local ranNumber = math.random(1, b)
-
 		local b = 0
-
 		for Entity, Chance in pairs(entitytable) do
 			b += (Chance * 10)
-
 			if b >= ranNumber then
 				print("Entity " ..Entity)
 				local ok = Entity
@@ -636,7 +660,7 @@ if not THEJ then
 		-- Run the created entity
 		Spawner.runEntity(entityTable)
 	end)
-	
+
 	game.ReplicatedStorage.ModEvents.GreenSpawn.Event:Connect(function()
 		task.wait(0.01)
 		EntityVars.Greenremaininggamespawns -= 1
@@ -657,7 +681,7 @@ if not THEJ then
 				end
 			end
 		end
-		
+
 		local entityTable = Spawner.createEntity({
 			CustomName = "Green", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892853479", -- Can be GitHub file or rbxassetid
@@ -747,7 +771,7 @@ if not THEJ then
 		-- Run the created entity
 		Spawner.runEntity(entityTable)
 	end)
-	
+
 	game.ReplicatedStorage.ModEvents.MatcherSpawn.Event:Connect(function()
 		local entityTable = Spawner.createEntity({
 			CustomName = "Matcher", -- Custom name of your entity
@@ -968,6 +992,110 @@ if not THEJ then
 		-- Run the created entity
 		Spawner.runEntity(entityTable)
 	end)	
+	
+	game.ReplicatedStorage.ModEvents.RuinSpawn.Event:Connect(function(initial: boolean)
+		local entityTable = Spawner.createEntity({
+			CustomName = "Ruin", -- Custom name of your entity
+			Model = "http://www.roblox.com/asset/?id=11892857355", -- Can be GitHub file or rbxassetid
+			Speed = 275 * EntityVars.RuinSpeedMultiplier, -- Percentage, 100 = default Rush speed
+			DelayTime = 0.2, -- Time before starting cycles (seconds)
+			HeightOffset = 0,
+			CanKill = true,
+			KillRange = 75,
+			BackwardsMovement = true,
+			BreakLights = false,
+			FlickerLights = {
+				false, -- Enabled/Disabled
+				0, -- Time (seconds)
+			},
+			Cycles = {
+				Min = 1,
+				Max = 1,
+				WaitTime = 0,
+			},
+			CamShake = {
+				true, -- Enabled/Disabled
+				{1, 35, 0.025, 0.75}, -- Magnitude, Roughnes, Fade in, Fade out
+				85, -- Shake start distance (from Entity to you)
+			},
+			Jumpscare = {
+				false, -- Enabled/Disabled
+				{
+					Image1 = "rbxassetid://10483855823", -- Image1 url
+					Image2 = "rbxassetid://10483999903", -- Image2 url
+					Shake = true,
+					Sound1 = {
+						10483790459, -- SoundId
+						{ Volume = 0.5 }, -- Sound properties
+					},
+					Sound2 = {
+						10483837590, -- SoundId
+						{ Volume = 0.5 }, -- Sound properties
+					},
+					Flashing = {
+						true, -- Enabled/Disabled
+						Color3.fromRGB(255, 255, 255), -- Color
+					},
+					Tease = {
+						true, -- Enabled/Disabled
+						Min = 1,
+						Max = 3,
+					},
+				},
+			},
+			CustomDialog = {}, -- Custom death message
+		})
+
+
+		-----[[  Debug -=- Advanced  ]]-----
+		entityTable.Debug.OnEntitySpawned = function()
+			--game.Players.LocalPlayer.PlayerGui.DoomsDayUI.Sounds["Ambience_Matcher"]:Play()
+			EntityVars.RuinActive = true
+		end
+
+		entityTable.Debug.OnEntityDespawned = function()
+			game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value).Door.ClientOpen:FireServer()
+			EntityVars.RuinActive = false 
+			EntityVars.RuinLapsRemaining -= 1
+			if EntityVars.RuinLapsRemaining == 0 then
+				if game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 then
+					game.ReplicatedStorage.ModEvents.FakeAchievement:Fire("Ruin", true)
+				end
+			end
+			EntityVars.Ruinroomcooldown = math.random(15,35)
+		end
+
+		entityTable.Debug.OnEntityStartMoving = function()
+		end
+
+		entityTable.Debug.OnEntityFinishedRebound = function()
+		end
+
+		entityTable.Debug.OnEntityEnteredRoom = function(room)
+			breakclosets(room.Name)
+		end
+
+		entityTable.Debug.OnLookAtEntity = function()
+		end
+
+		entityTable.Debug.OnDeath = function()
+			game.ReplicatedStorage.ModEvents.JumpscareEvent:Fire("A200")
+			local player = game.Players.LocalPlayer
+			if player.Character:GetAttribute("ForceOut") == true or player.Character:GetAttribute("HideSickness") and player.Character:GetAttribute("HideSickness") == true or player.Character:GetAttribute("HideSemiSickness") and player.Character:GetAttribute("HideSemiSickness") == true then
+				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to Ruin, because you couldn't hide..", "Remember, you only need to hide when Ruin is near."})
+			else
+				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to who you call Ruin..", "They are a unique one.", "Pay attention to when the lights turn red, and you hear a loud noise.", "This is their que!", "You may also need to go into future rooms to find new hiding spots."})
+			end
+		end
+		------------------------------------
+		
+		if initial then
+			
+		end
+
+		-- Run the created entity
+		Spawner.runEntity(entityTable)
+	end)	
 
 	game.ReplicatedStorage.ModEvents.ClaimSpawn.Event:Connect(function()
 		if not EntityVars.ClaimSpawned then
@@ -1161,7 +1289,7 @@ if not THEJ then
 		end
 		local mouthpossibility = math.random(1,math.random(9,13))
 		if mouthpossibility == 1 then
-			
+
 		end
 	end)
 
