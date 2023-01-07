@@ -501,28 +501,31 @@ if not THEJ then
 
 	function breakindividualhidingspot(part: Instance)
 		if part.Name == "Wardrobe" then
-			part.HidePrompt:Destroy()
-			part.Door1:Destroy()
-			part.Door2:Destroy()
-			part.Main.CanCollide = false
-			part.Main.SoundEnter:Destroy()
-			part.Main.SoundExit:Destroy()
-			part.Main.Peek:Destroy()
+			if not part:GetAttribute("Broken") or part:GetAttribute("Broken") == nil or part:GetAttribute("Broken") == false then
+				part.HidePrompt:Destroy()
+				part.Door1:Destroy()
+				part.Door2:Destroy()
+				part.Main.CanCollide = false
+				part.Main.SoundEnter:Destroy()
+				part.Main.SoundExit:Destroy()
+				part.Main.Peek:Destroy()
 
-			local braekdoors = game:GetObjects("rbxassetid://12026933579")[1]
-			braekdoors.Parent = game.Workspace.CurrentRooms:FindFirstChild(part.Parent)
+				local braekdoors = game:GetObjects("rbxassetid://12026933579")[1]
+				braekdoors.Parent = game.Workspace.CurrentRooms:FindFirstChild(part.Parent)
 
-			braekdoors:PivotTo(part.Main.CFrame)
-			braekdoors.Door1.Anchored = false
-			braekdoors.Door1.Knob.Anchored = false
-			braekdoors.Door2.Anchored = false
-			braekdoors.Door2.Knob.Anchored = false
-			braekdoors.Door1.MaterialVariant = "PlywoodALT"
-			braekdoors.Door2.MaterialVariant = "PlywoodALT"
-			local random1 = math.random(1,3)
-			local random2 = math.random(1,3)
-			braekdoors.Door1:FindFirstChild(random1):Play()
-			braekdoors.Door2:FindFirstChild(random2):Play()
+				braekdoors:PivotTo(part.Main.CFrame)
+				braekdoors.Door1.Anchored = false
+				braekdoors.Door1.Knob.Anchored = false
+				braekdoors.Door2.Anchored = false
+				braekdoors.Door2.Knob.Anchored = false
+				braekdoors.Door1.MaterialVariant = "PlywoodALT"
+				braekdoors.Door2.MaterialVariant = "PlywoodALT"
+				local random1 = math.random(1,3)
+				local random2 = math.random(1,3)
+				braekdoors.Door1:FindFirstChild(random1):Play()
+				braekdoors.Door2:FindFirstChild(random2):Play()
+				part:SetAttribute("Broken", true)
+			end
 		end
 	end
 
