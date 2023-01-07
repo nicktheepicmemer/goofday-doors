@@ -1027,7 +1027,7 @@ if not THEJ then
 		local entityTable = Spawner.createEntity({
 			CustomName = "Ruin", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892857355", -- Can be GitHub file or rbxassetid
-			Speed = 90 * EntityVars.RuinSpeedMultiplier, -- Percentage, 100 = default Rush speed
+			Speed = 120 * EntityVars.RuinSpeedMultiplier, -- Percentage, 100 = default Rush speed
 			DelayTime = 3, -- Time before starting cycles (seconds)
 			HeightOffset = 0,
 			CanKill = true,
