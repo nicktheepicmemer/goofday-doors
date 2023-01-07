@@ -1102,9 +1102,9 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityEnteredRoom = function(room)
-			if game.ReplicatedStorage.GameData.LatestRoom.Value ~= room then
-				breakclosets(room.Name)
-			end
+			--if game.ReplicatedStorage.GameData.LatestRoom.Value ~= room then
+				--breakclosets(room.Name)
+			--end
 		end
 
 		entityTable.Debug.OnLookAtEntity = function()
