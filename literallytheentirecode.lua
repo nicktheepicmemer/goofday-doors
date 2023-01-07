@@ -391,6 +391,7 @@ if not THEJ then
 		RuinActive = false,
 		RuinLapsRemaining = 0,
 		Ruinroomcooldown = math.random(8,11),
+		RuinHidingSpotCheckDistance = 50,
 		TrickChanceMin = 1,
 		TrickChanceMax = 20,
 		TrickMaxPerRoom = 1,
@@ -425,6 +426,7 @@ if not THEJ then
 		EntityVars.ExploitSpeedMultiplier = 3.5
 		EntityVars.SmileSpeedMultiplier = 2
 		EntityVars.RuinSpeedMultiplier = 2.5
+		EntityVars.RuinHidingSpotCheckDistance = 100
 		EntityVars.A200SpeedMultiplier = 2
 		EntityVars.MatcherSpeedMultiplier = 3
 		EntityVars.BlinkLikelihoodMultiplier = Random.new():NextNumber(0.5, 5)
@@ -434,6 +436,7 @@ if not THEJ then
 		EntityVars.ExploitSpeedMultiplier = 1
 		EntityVars.SmileSpeedMultiplier = 1
 		EntityVars.RuinSpeedMultiplier = 1
+		EntityVars.RuinHidingSpotCheckDistance = 50
 		EntityVars.A200SpeedMultiplier = 1
 		EntityVars.MatcherSpeedMultiplier = 1
 		EntityVars.BlinkLikelihoodMultiplier = 1
@@ -466,7 +469,7 @@ if not THEJ then
 	--entities related stuff that aren't events !!
 
 	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors%20Entity%20Spawner/Source.lua"))()
-	
+
 	function breakclosets(room: number)
 		for i,part in pairs (game.Workspace.CurrentRooms:FindFirstChild(room).Assets:GetChildren()) do
 			if part.Name == "Wardrobe" then
@@ -495,7 +498,34 @@ if not THEJ then
 			end
 		end
 	end
-	
+
+	function breakindividualhidingspot(part: Instance)
+		if part.Name == "Wardrobe" then
+			part.HidePrompt:Destroy()
+			part.Door1:Destroy()
+			part.Door2:Destroy()
+			part.Main.CanCollide = false
+			part.Main.SoundEnter:Destroy()
+			part.Main.SoundExit:Destroy()
+			part.Main.Peek:Destroy()
+
+			local braekdoors = game:GetObjects("rbxassetid://12026933579")[1]
+			braekdoors.Parent = game.Workspace.CurrentRooms:FindFirstChild(part.Parent)
+
+			braekdoors:PivotTo(part.Main.CFrame)
+			braekdoors.Door1.Anchored = false
+			braekdoors.Door1.Knob.Anchored = false
+			braekdoors.Door2.Anchored = false
+			braekdoors.Door2.Knob.Anchored = false
+			braekdoors.Door1.MaterialVariant = "PlywoodALT"
+			braekdoors.Door2.MaterialVariant = "PlywoodALT"
+			local random1 = math.random(1,3)
+			local random2 = math.random(1,3)
+			braekdoors.Door1:FindFirstChild(random1):Play()
+			braekdoors.Door2:FindFirstChild(random2):Play()
+		end
+	end
+
 	function anyissues(normalcare: boolean, megacare: boolean, hardcorecheck: boolean)
 		local heyman = false
 		if normalcare then
@@ -686,7 +716,7 @@ if not THEJ then
 			CustomName = "Green", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892853479", -- Can be GitHub file or rbxassetid
 			Speed = 70 * EntityVars.GreenSpeedMultiplier, -- Percentage, 100 = default Rush speed
-			DelayTime = 0.5, -- Time before starting cycles (seconds)
+			DelayTime = 1, -- Time before starting cycles (seconds)
 			HeightOffset = 0,
 			CanKill = true,
 			KillRange = 95.1,
@@ -992,13 +1022,13 @@ if not THEJ then
 		-- Run the created entity
 		Spawner.runEntity(entityTable)
 	end)	
-	
+
 	game.ReplicatedStorage.ModEvents.RuinSpawn.Event:Connect(function(initial: boolean)
 		local entityTable = Spawner.createEntity({
 			CustomName = "Ruin", -- Custom name of your entity
 			Model = "http://www.roblox.com/asset/?id=11892857355", -- Can be GitHub file or rbxassetid
-			Speed = 275 * EntityVars.RuinSpeedMultiplier, -- Percentage, 100 = default Rush speed
-			DelayTime = 0.2, -- Time before starting cycles (seconds)
+			Speed = 90 * EntityVars.RuinSpeedMultiplier, -- Percentage, 100 = default Rush speed
+			DelayTime = 3, -- Time before starting cycles (seconds)
 			HeightOffset = 0,
 			CanKill = true,
 			KillRange = 75,
@@ -1054,7 +1084,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityDespawned = function()
-			game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value).Door.ClientOpen:FireServer()
+			--game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value).Door.ClientOpen:FireServer()
 			EntityVars.RuinActive = false 
 			EntityVars.RuinLapsRemaining -= 1
 			if EntityVars.RuinLapsRemaining == 0 then
@@ -1072,7 +1102,9 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityEnteredRoom = function(room)
-			breakclosets(room.Name)
+			if game.ReplicatedStorage.GameData.LatestRoom.Value ~= room then
+				breakclosets(room.Name)
+			end
 		end
 
 		entityTable.Debug.OnLookAtEntity = function()
@@ -1088,9 +1120,9 @@ if not THEJ then
 			end
 		end
 		------------------------------------
-		
+
 		if initial then
-			
+
 		end
 
 		-- Run the created entity
@@ -1945,6 +1977,37 @@ if not THEJ then
 			for i,child in pairs (game.Workspace:GetChildren()) do
 				if child.Name == "A-200" and child:GetChildren()[1]:FindFirstChild("animating").Value == false then
 					game.ReplicatedStorage.ModEvents.AnimationFrame:Fire(child:GetChildren()[1], true)
+				end
+			end
+		end
+		if EntityVars.RuinActive then
+			for i,child in pairs (game.Workspace:GetChildren()) do
+				if child.Name == "Ruin" then
+					for i,roomies in pairs (game.Workspace.CurrentRooms:GetChildren()) do
+						for i,part in pairs (roomies.Assets:GetDescendants()) do
+							if part.Name == "Wardrobe" then
+								local Params = RaycastParams.new()
+								Params.FilterDescendantsInstances = {
+									game.Players.LocalPlayer.Character,
+									child
+								}
+
+								Params.CollisionGroup = "Default"
+								Params.RespectCanCollide = true
+
+								local dir = CFrame.lookAt(child.PrimaryPart.Position, part.PrimaryPart.Position).LookVector * EntityVars.RuinHidingSpotCheckDistance.Value
+								local Cast = workspace:Raycast(child.Position, dir)
+
+								if Cast and Cast.Instance then
+									local Hit = Cast.Instance
+
+									if Hit:IsDescendantOf(part) then
+										breakindividualhidingspot(part)
+									end
+								end
+							end
+						end
+					end
 				end
 			end
 		end
