@@ -511,7 +511,7 @@ if not THEJ then
 				part.Main.Peek:Destroy()
 
 				local braekdoors = game:GetObjects("rbxassetid://12026933579")[1]
-				braekdoors.Parent = game.Workspace.CurrentRooms:FindFirstChild(part.Parent)
+				braekdoors.Parent = part.Parent
 
 				braekdoors:PivotTo(part.Main.CFrame)
 				braekdoors.Door1.Anchored = false
@@ -520,7 +520,7 @@ if not THEJ then
 				braekdoors.Door2.Knob.Anchored = false
 				braekdoors.Door1.MaterialVariant = "PlywoodALT"
 				braekdoors.Door2.MaterialVariant = "PlywoodALT"
-				local random1 = math.random(1,3)
+				local random1 = math.random(1,3) 
 				local random2 = math.random(1,3)
 				braekdoors.Door1:FindFirstChild(random1):Play()
 				braekdoors.Door2:FindFirstChild(random2):Play()
