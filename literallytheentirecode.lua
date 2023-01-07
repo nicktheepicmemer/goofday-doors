@@ -1996,7 +1996,7 @@ if not THEJ then
 									Params.CollisionGroup = "Default"
 									Params.RespectCanCollide = true
 	
-									local dir = CFrame.lookAt(child.PrimaryPart.Position, part.PrimaryPart.Position).LookVector * EntityVars.RuinHidingSpotCheckDistance.Value
+									local dir = CFrame.lookAt(child.PrimaryPart.Position, part.PrimaryPart.Position).LookVector * EntityVars.RuinHidingSpotCheckDistance
 									local Cast = workspace:Raycast(child.Position, dir)
 	
 									if Cast and Cast.Instance then
