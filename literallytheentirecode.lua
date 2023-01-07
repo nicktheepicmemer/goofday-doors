@@ -1984,25 +1984,27 @@ if not THEJ then
 			for i,child in pairs (game.Workspace:GetChildren()) do
 				if child.Name == "Ruin" then
 					for i,roomies in pairs (game.Workspace.CurrentRooms:GetChildren()) do
-						for i,part in pairs (roomies.Assets:GetDescendants()) do
-							if part.Name == "Wardrobe" then
-								local Params = RaycastParams.new()
-								Params.FilterDescendantsInstances = {
-									game.Players.LocalPlayer.Character,
-									child
-								}
-
-								Params.CollisionGroup = "Default"
-								Params.RespectCanCollide = true
-
-								local dir = CFrame.lookAt(child.PrimaryPart.Position, part.PrimaryPart.Position).LookVector * EntityVars.RuinHidingSpotCheckDistance.Value
-								local Cast = workspace:Raycast(child.Position, dir)
-
-								if Cast and Cast.Instance then
-									local Hit = Cast.Instance
-
-									if Hit:IsDescendantOf(part) then
-										breakindividualhidingspot(part)
+						if roomies:FindFirstChild("Assets") then
+							for i,part in pairs (roomies.Assets:GetDescendants()) do
+								if part.Name == "Wardrobe" then
+									local Params = RaycastParams.new()
+									Params.FilterDescendantsInstances = {
+										game.Players.LocalPlayer.Character,
+										child
+									}
+	
+									Params.CollisionGroup = "Default"
+									Params.RespectCanCollide = true
+	
+									local dir = CFrame.lookAt(child.PrimaryPart.Position, part.PrimaryPart.Position).LookVector * EntityVars.RuinHidingSpotCheckDistance.Value
+									local Cast = workspace:Raycast(child.Position, dir)
+	
+									if Cast and Cast.Instance then
+										local Hit = Cast.Instance
+	
+										if Hit:IsDescendantOf(part) then
+											breakindividualhidingspot(part)
+										end
 									end
 								end
 							end
