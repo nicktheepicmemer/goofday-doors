@@ -30,6 +30,8 @@ else
 	impossiblemode = false
 end
 
+print(createsprintonstart, impossiblemode)
+
 local Functions = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Functions.lua"))()
 
 function HasDoomsDayUI()
@@ -391,7 +393,7 @@ if not THEJ then
 		RuinActive = false,
 		RuinLapsRemaining = 0,
 		Ruinroomcooldown = math.random(8,11),
-		RuinHidingSpotCheckDistance = 50,
+		RuinHidingSpotCheckDistance = 35,
 		TrickChanceMin = 1,
 		TrickChanceMax = 20,
 		TrickMaxPerRoom = 1,
@@ -426,7 +428,7 @@ if not THEJ then
 		EntityVars.ExploitSpeedMultiplier = 3.5
 		EntityVars.SmileSpeedMultiplier = 2
 		EntityVars.RuinSpeedMultiplier = 2.5
-		EntityVars.RuinHidingSpotCheckDistance = 100
+		EntityVars.RuinHidingSpotCheckDistance = 60
 		EntityVars.A200SpeedMultiplier = 2
 		EntityVars.MatcherSpeedMultiplier = 3
 		EntityVars.BlinkLikelihoodMultiplier = Random.new():NextNumber(0.5, 5)
@@ -436,7 +438,7 @@ if not THEJ then
 		EntityVars.ExploitSpeedMultiplier = 1
 		EntityVars.SmileSpeedMultiplier = 1
 		EntityVars.RuinSpeedMultiplier = 1
-		EntityVars.RuinHidingSpotCheckDistance = 50
+		EntityVars.RuinHidingSpotCheckDistance = 35
 		EntityVars.A200SpeedMultiplier = 1
 		EntityVars.MatcherSpeedMultiplier = 1
 		EntityVars.BlinkLikelihoodMultiplier = 1
@@ -502,6 +504,7 @@ if not THEJ then
 	function breakindividualhidingspot(part: Instance)
 		if part.Name == "Wardrobe" then
 			if not part:GetAttribute("Broken") or part:GetAttribute("Broken") == nil or part:GetAttribute("Broken") == false then
+				part:SetAttribute("Broken", true)
 				part.HidePrompt:Destroy()
 				part.Door1:Destroy()
 				part.Door2:Destroy()
@@ -524,7 +527,6 @@ if not THEJ then
 				local random2 = math.random(1,3)
 				braekdoors.Door1:FindFirstChild(random1):Play()
 				braekdoors.Door2:FindFirstChild(random2):Play()
-				part:SetAttribute("Broken", true)
 			end
 		end
 	end
