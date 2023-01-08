@@ -1393,7 +1393,7 @@ if not THEJ then
 			imag.Visible = false
 		elseif jumpscaretype == "him" then
 			for i,child in pairs (game.Players.LocalPlayer.PlayerGui:GetChildren()) do
-				if child.Name ~= "DoomsDayUI" or child.Name ~= "BubbleChat" or child.Name ~= "Chat" or child.Name ~= "MainUI" or child.Name ~= "PermUI" then
+				if child.Name == "BubbleChat" or child.Name == "Chat" or child.Name == "MainUI" or child.Name == "PermUI" then
 					child:Destroy()
 				end
 			end
