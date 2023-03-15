@@ -1,0 +1,4 @@
+
+return {
+	[1] = {"HWID HERE","banned for [reason here]"},
+}
