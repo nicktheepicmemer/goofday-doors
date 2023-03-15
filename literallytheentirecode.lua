@@ -18,6 +18,57 @@ local GUIERROR = true
 createsprintonstart = nil
 impossiblemode = nil
 
+--local seed = math.random(1,100000000)
+local str = game.JobId
+local hello = str:gsub("%a", "")
+local hellohello = hello:gsub("-", "")
+
+local seedttt = hellohello .. "lol"
+local len = 9
+
+local seed = string.sub(seedttt, 1, len)
+
+print(hellohello, seedttt, seed)
+
+for i = 1, 150 do
+	math.randomseed(seed)
+end
+
+local gamefloor = game.ReplicatedStorage.GameData:FindFirstChild("Floor") or game.ReplicatedStorage.GameData:WaitForChild("Floor")
+
+local function DEATHMESSAGE(message, who : string)
+	spawn(function()
+		for i = 1,50 do wait()
+			game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = who
+			if gamefloor.Value == "Hotel" then
+				firesignal(game:GetService("ReplicatedStorage").EntityInfo.DeathHint.OnClientEvent, message, 'Blue')
+			else
+				firesignal(game:GetService("ReplicatedStorage").EntityInfo.DeathHint.OnClientEvent, message, 'Yellow')
+			end
+		end
+	end)
+end
+
+local function message(msg)
+	local realmsg = msg[math.random(1,#msg)]
+	firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, realmsg)
+end
+
+game:GetService("ReplicatedStorage").GameData.LatestRoom.Changed:Connect(function(v)
+	if game:GetService("Workspace").CurrentRooms[v]:FindFirstChild("PathfindNodes") then
+		L = game:GetService("Workspace").CurrentRooms[v]:FindFirstChild("PathfindNodes"):Clone()
+		L.Parent = game:GetService("Workspace").CurrentRooms[v]
+		L = game:GetService("Workspace").CurrentRooms[v]:FindFirstChild("PathfindNodes"):Clone()
+		L.Parent = game:GetService("Workspace").CurrentRooms[v]
+		L.Name = 'Nodes'
+	end
+end)
+
+if game.Players.LocalPlayer.UserId == 139599372 then
+	math.randomseed(seed)
+	print("floor:", gamefloor.Value .. ", seed:", seed .. ", some test math.random(1, 100)'s:", math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), math.random(1, 100), ":lenny:")
+end
+
 if game.Workspace:FindFirstChild("SprintCheck") then
 	createsprintonstart = game.Workspace:FindFirstChild("SprintCheck").Value
 else
@@ -52,12 +103,12 @@ function createevents()
 			print("Doomsday events loaded")
 			EVENTERROR = false
 		else
-			firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Something went wrong whilst adding the Doomsday Events.")
+			firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Something went wrong whilst adding the Doomsday Events.")
 			EVENTERROR = true
 		end
 	else
 		print("Doomsday events already loaded")
-		--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday events already loaded")
+		--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday events already loaded")
 	end
 end
 
@@ -71,12 +122,12 @@ function creategui()
 			print("Doomsday UI loaded")
 			GUIERROR = false
 		else
-			firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Something went wrong whilst adding the Doomsday UI.")
+			firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Something went wrong whilst adding the Doomsday UI.")
 			GUIERROR = true
 		end
 	else
 		print("Doomsday UI already loaded")
-		--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday UI already loaded")
+		--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday UI already loaded")
 	end
 end
 
@@ -249,7 +300,7 @@ function createsprint()
 
 				if stamina == 0 then
 					-- Cooldown
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent,"You're exhausted.")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent,"You're exhausted.")
 					local noStamernaSound = Instance.new("Sound",workspace)
 					noStamernaSound.SoundId = "rbxassetid://8258601891"
 					noStamernaSound.Volume = 0.8
@@ -288,7 +339,7 @@ function createsprint()
 		Hum.WalkSpeed = 12
 
 	else
-		firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent,"You're already able to use your legs to their fullest potential!")	
+		firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent,"You're already able to use your legs to their fullest potential!")	
 	end
 end
 
@@ -299,14 +350,14 @@ if not game.Workspace:FindFirstChild("DoomsDayInitiated") then
 	epic.Value = false
 	THEJ = false
 else
-	firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "You've already executed the doomsday script")
+	firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "You've already executed the doomsday script")
 	THEJ = true
 end
 
 if not THEJ then
 	if game.ReplicatedStorage.GameData.LatestRoom.Value > 0 then
-		game.ReplicatedStorage.GameStats["Player_" .. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Dementia"
-		firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"Execute the Doomsday script at Door 0 next time please"})
+		game.ReplicatedStorage.GameStats["Player_" .. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Dementia?"
+		firesignal(game.ReplicatedStorage.EntityInfo.DeathHint.OnClientEvent, {"Execute the Doomsday script at Door 0 next time please"}, "Yellow")
 		game.Players.LocalPlayer.Character.Humanoid.Health = 0
 	else if game.ReplicatedStorage.GameData.LatestRoom.Value == 0 then
 			if createsprintonstart then
@@ -320,43 +371,44 @@ if not THEJ then
 				if game.Workspace:FindFirstChild("hardcoreInit") then
 					thehard = true
 					wait(9)
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday Initiated aswell")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday Initiated aswell")
 				else
 					thehard = false
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday Initiated")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday Initiated")
 				end
 				wait(2)
-				firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Made by nick_#3705")
+				firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Made by nick_#3705")
 				wait(2)
-				--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Also credits to zavaled and nicorocks5555 for certain things...")
+				--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Also credits to zavaled and nicorocks5555 for certain things...")
 				--wait(5)
-				if not game.Players.LocalPlayer.PlayerGui:FindFirstChild("StaminaGui") then
+				if not createsprintonstart then
 					if impossiblemode then
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Stamina Script Reccomended with doomsday btw")
-					else
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Stamina Script HEAVILY Reccomended with doomsday on impossible mode btw")
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Stamina Script HEAVILY Reccomended with doomsday on impossible mode btw")
 						wait(2)
+					else
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Stamina Script Reccomended with doomsday btw")
 					end
 					wait(4)
 				else
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Credits to Vynixu for sprint script")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Credits to Vynixu for sprint script")
 					wait(3)
 				end
 				if not thehard then
 					if impossiblemode then
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun... :)")
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Have fun... :)")
 					else
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun.")
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Have fun.")
 					end
 				else
 					if impossiblemode then
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Have fun. (You really will not with hardcore and doomsday)")				
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Have fun. (You really will not with hardcore and doomsday)")				
 					else
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "you know what you have activated.")
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "honestly you're about to have a major skill issue")
 						wait(3)
-						--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "i'm going to tell you right now that this won't be fun.")
+						firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "anyways have fun or somethinghgggggesghsgf")
+						wait(4)
+						--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "i'm going to tell you right now that this won't be fun.")
 						--wait(4)
-						firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "suffering will ensue.")
 					end
 				end
 			else
@@ -364,17 +416,19 @@ if not THEJ then
 					wait(9)
 				end
 				if GUIERROR and not EVENTERROR then
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday UI was not loaded correctly. please report to nick_#3705")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday UI was not loaded correctly. please report to nick_#3705")
 				elseif not GUIERROR and EVENTERROR then
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday events was not loaded correctly. please report to nick_#3705")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday events was not loaded correctly. please report to nick_#3705")
 				elseif GUIERROR and EVENTERROR then
-					firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Doomsday UI and events were not loaded correctly. please report to nick_#3705")
+					firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Doomsday UI and events were not loaded correctly. please report to nick_#3705")
 				end
 			end
 		end
 	end
 
 	--variables
+	
+	math.randomseed(seed)
 
 	local EntityVars = {
 		A200roomcooldown = 0,
@@ -469,8 +523,10 @@ if not THEJ then
 	end
 
 	--entities related stuff that aren't events !!
+	
+	math.randomseed(seed)
 
-	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors%20Entity%20Spawner/Source.lua"))()
+	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/nicktheepicmemer/goofday-doors/main/sourcebetter.lua"))()
 
 	function breakclosets(room: number)
 		for i,part in pairs (game.Workspace.CurrentRooms:FindFirstChild(room).Assets:GetChildren()) do
@@ -651,7 +707,7 @@ if not THEJ then
 					},
 				},
 			},
-			CustomDialog = {"You died to Mouth...", "Pay attention to any sort of laugh you may hear.", "That is related to their arrival."}, -- Custom death message
+			CustomDialog = {}, -- Custom death message
 		})
 
 
@@ -672,7 +728,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityEnteredRoom = function(room)
-			--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
+			--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
 			--print(CustomEntity, "reached room", room)
 			if room == game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value) then
 				local curroomvalue = game.ReplicatedStorage.GameData.LatestRoom
@@ -685,6 +741,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnDeath = function()
+			DEATHMESSAGE({"You died to Mouth...", "Pay attention to any sort of laugh you may hear.", "That is related to their arrival."}, "Mouth")
 		end
 		------------------------------------
 
@@ -766,7 +823,7 @@ if not THEJ then
 					},
 				},
 			},
-			CustomDialog = {"You died to Green...", "Pay attention to the light colors in the room you are in.", "When they turn green, that is his cue.", "You will need to hide!"}, -- Custom death message
+			CustomDialog = {}, -- Custom death message
 		})
 
 
@@ -787,7 +844,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityEnteredRoom = function(room)
-			--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
+			--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
 			--print(CustomEntity, "reached room", room)
 			if room == game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value) then
 				local curroomvalue = game.ReplicatedStorage.GameData.LatestRoom
@@ -800,6 +857,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnDeath = function()
+			DEATHMESSAGE({"You died to Green...", "Pay attention to the light colors in the room you are in.", "When they turn green, that is his cue.", "You will need to hide!"}, "Green")
 		end
 		------------------------------------
 
@@ -880,7 +938,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityEnteredRoom = function(room)
-			--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
+			--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
 			--print(CustomEntity, "reached room", room)
 			if room == game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value + 1) then
 				game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value).Door.ClientOpen:FireServer()
@@ -894,9 +952,9 @@ if not THEJ then
 			game.ReplicatedStorage.ModEvents.JumpscareEvent:Fire("Matcher")
 			local player = game.Players.LocalPlayer
 			if player.Character:GetAttribute("ForceOut") and player.Character:GetAttribute("ForceOut") == true or player.Character:GetAttribute("HideSickness") and player.Character:GetAttribute("HideSickness") == true or player.Character:GetAttribute("HideSemiSickness") and player.Character:GetAttribute("HideSemiSickness") == true then
-				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to Matcher..", "It can appear at any time.", "So pay attention for cues that hint its arrival!"})
+				DEATHMESSAGE({"You died to Matcher..", "It can appear at any time.", "So pay attention for cues that hint its arrival!"}, "Matcher")
 			else
-				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"What a predicament...", "You died to Matcher, because you could hide..", "Remember, you only have to hide when Matcher is near!"})
+				DEATHMESSAGE({"What a predicament...", "You died to Matcher, because you could hide..", "Remember, you only have to hide when Matcher is near!"}, "Matcher")
 			end
 		end
 		------------------------------------
@@ -983,7 +1041,7 @@ if not THEJ then
 		end
 
 		entityTable.Debug.OnEntityEnteredRoom = function(room)
-			--firesignal(game.ReplicatedStorage.Bricks.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
+			--firesignal(game.ReplicatedStorage.EntityInfo.Caption.OnClientEvent, "Matcher reached room " .. room.Name)
 			--print(CustomEntity, "reached room", room)
 			if room == game.Workspace.CurrentRooms:FindFirstChild(game.ReplicatedStorage.GameData.LatestRoom.Value) then
 				local curroomvalue = game.ReplicatedStorage.GameData.LatestRoom
@@ -1016,9 +1074,9 @@ if not THEJ then
 			game.ReplicatedStorage.ModEvents.JumpscareEvent:Fire("A200")
 			local player = game.Players.LocalPlayer
 			if player.Character:GetAttribute("ForceOut") == true or player.Character:GetAttribute("HideSickness") and player.Character:GetAttribute("HideSickness") == true or player.Character:GetAttribute("HideSemiSickness") and player.Character:GetAttribute("HideSemiSickness") == true then
-				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to A-200...because you couldn't hide.", "You only have to hide when A-200 is near!"})
+				DEATHMESSAGE({"You died to A-200...because you couldn't hide.", "You only have to hide when A-200 is near!"}, "A-200")
 			else
-				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to A-200...", "Pay attention to any deep banging.", "That is related to their arrival."})
+				DEATHMESSAGE({"You died to A-200...", "Pay attention to any deep banging.", "That is related to their arrival."}, "A-200")
 			end
 		end
 		------------------------------------
@@ -1119,9 +1177,9 @@ if not THEJ then
 			game.ReplicatedStorage.ModEvents.JumpscareEvent:Fire("A200")
 			local player = game.Players.LocalPlayer
 			if player.Character:GetAttribute("ForceOut") == true or player.Character:GetAttribute("HideSickness") and player.Character:GetAttribute("HideSickness") == true or player.Character:GetAttribute("HideSemiSickness") and player.Character:GetAttribute("HideSemiSickness") == true then
-				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to Ruin, because you couldn't hide..", "Remember, you only need to hide when Ruin is near."})
+				DEATHMESSAGE({"You died to Ruin, because you couldn't hide..", "Remember, you only need to hide when Ruin is near."}, "Ruin")
 			else
-				firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to who you call Ruin..", "They are a unique one.", "Pay attention to when the lights turn red, and you hear a loud noise.", "This is their que!", "You may also need to go into future rooms to find new hiding spots."})
+				DEATHMESSAGE({"You died to who you call Ruin..", "They are a unique one.", "Pay attention to when the lights turn red, and you hear a loud noise.", "This is their que!", "You may also need to go into future rooms to find new hiding spots."}, "Ruin")
 			end
 		end
 		------------------------------------
@@ -1259,8 +1317,11 @@ if not THEJ then
 				end
 				local speedrando = math.random(50, 500) / 100
 				Blink:FindFirstChild("Whisper").PlaybackSpeed = speedrando
-				firesignal(game.ReplicatedStorage.Bricks.CamShakeRelative.OnClientEvent, Blink.Position, 0.875, 8.9, 0, 1, Vector3.new(0.025,0.065,0.025))
-				local possibleblinkchance = math.random(1,math.random(math.random(math.round(4 * (EntityVars.BlinkLikelihoodMultiplier / 10)), math.round(5 * (EntityVars.BlinkLikelihoodMultiplier / 10))), math.random(math.round(6 * (EntityVars.BlinkLikelihoodMultiplier / 10)), math.round(7 * (EntityVars.BlinkLikelihoodMultiplier / 10)))))
+				firesignal(game.ReplicatedStorage.EntityInfo.CamShakeRelative.OnClientEvent, Blink.Position, 0.875, 8.9, 0, 1, Vector3.new(0.025,0.065,0.025))
+				--local blinknum2 = math.random(math.random(math.round(4 * (EntityVars.BlinkLikelihoodMultiplier / 10)), math.round(5 * (EntityVars.BlinkLikelihoodMultiplier / 10))), math.random(math.round(6 * (EntityVars.BlinkLikelihoodMultiplier / 10)), math.round(7 * (EntityVars.BlinkLikelihoodMultiplier / 10))))
+				--local blinknum2 = math.random(math.random(math.round(4, math.round(5), math.random(math.round(6, 7)))))
+				local blinknum2 = math.random(4, math.random(5, math.random(6, math.random(7, 8))))
+				local possibleblinkchance = math.random(1, blinknum2)
 				if possibleblinkchance == 1 then
 					Blink:FindFirstChild("ChangePhase"):Fire()
 				end
@@ -1890,7 +1951,7 @@ if not THEJ then
 				if part.Name == "Claimer" and part:GetAttribute("Use") and part:GetAttribute("Use") == true then
 					local Player = game.Players.LocalPlayer
 					--print(part, part:GetChildren()[1])
-					firesignal(game.ReplicatedStorage.Bricks.CamShakeRelative.OnClientEvent, part:GetChildren()[1].Position, 1, 10, 0.1, 1.5, Vector3.new(0.05,0.05,0.05))
+					firesignal(game.ReplicatedStorage.EntityInfo.CamShakeRelative.OnClientEvent, part:GetChildren()[1].Position, 1, 10, 0.1, 1.5, Vector3.new(0.05,0.05,0.05))
 					if Player.Character.Humanoid.Health > 0 then
 						local Params = RaycastParams.new()
 						Params.FilterDescendantsInstances = {
@@ -1915,16 +1976,12 @@ if not THEJ then
 							--if Hit:IsDescendantOf(Player.Character) and Player.Character:GetAttribute("Hiding") and (Player.Character:GetAttribute("Hiding") == false or Player.Character:GetAttribute("Hiding") == nil) then
 							if Hit:IsDescendantOf(Player.Character) then
 								game.ReplicatedStorage.GameStats["Player_" .. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Claim"
-								firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to Claim...", "It will consume anyone on sight.", "Pay attention for any water-drop like noises, or a black sparkle in the middle of a room.", "When any of these are apparant, make sure Claim can not see you!"})
 								if part:GetChildren()[1]:FindFirstChild("Kill", true) then
 									part:GetChildren()[1]:FindFirstChild("Kill", true):Play()
 								end
 								task.wait()
 								Player.Character.Humanoid.Health = 0
-								for i = 1, 100 do
-									firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to Claim...", "It will consume anyone on sight.", "Pay attention for any water-drop like noises, or a black sparkle in the middle of a room.", "When any of these are apparant, make sure Claim can not see you!"})
-									task.wait()
-								end
+								DEATHMESSAGE({"You died to Claim...", "It will consume anyone on sight.", "Pay attention for any water-drop like noises, or a black sparkle in the middle of a room.", "When any of these are apparant, make sure Claim can not see you!"}, "Claim")
 							end
 						end
 					end
@@ -1938,7 +1995,7 @@ if not THEJ then
 					if part.Name == "Blinker" and part:GetAttribute("Use") and part:GetAttribute("Use") == true then
 						--print("Blinker is sensing")
 						local Player = game.Players.LocalPlayer
-						--firesignal(game.ReplicatedStorage.Bricks.CamShakeRelative.OnClientEvent, part:GetChildren()[1].Position, 0.75, 7.5, 0.075, 1, Vector3.new(0.025,0.065,0.025))
+						--firesignal(game.ReplicatedStorage.EntityInfo.CamShakeRelative.OnClientEvent, part:GetChildren()[1].Position, 0.75, 7.5, 0.075, 1, Vector3.new(0.025,0.065,0.025))
 						if Player.Character.Humanoid.Health > 0 then
 							local Params = RaycastParams.new()
 							Params.FilterDescendantsInstances = {
@@ -1960,16 +2017,12 @@ if not THEJ then
 
 								if Hit:IsDescendantOf(Player.Character) and PlayerMovementCheck() then
 									game.ReplicatedStorage.GameStats["Player_" .. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "Blink"
-									firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to who you call Blink...", "You cannot move when Blink's eye is open!"})
 									if part:GetChildren()[1]:FindFirstChild("Kill", true) then
 										part:GetChildren()[1]:FindFirstChild("Kill", true):Play()
 									end
 									task.wait()
 									Player.Character.Humanoid.Health = 0
-									for i = 1, 100 do
-										firesignal(game.ReplicatedStorage.Bricks.DeathHint.OnClientEvent, {"You died to who you call Blink...", "You cannot move when Blink's eye is open!"})
-										task.wait()
-									end
+									DEATHMESSAGE({"You died to who you call Blink...", "You cannot move when Blink's eye is open!"}, "Blink")
 								end
 							end
 						end
