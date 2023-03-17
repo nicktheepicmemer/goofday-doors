@@ -108,9 +108,9 @@ Spawner.createEntity = function(config)
         if entityModel.PrimaryPart then
             entityModel.PrimaryPart.Anchored = true
             
-            if config.CustomName then
-                entityModel.Name = config.CustomName
-            end
+            --if config.CustomName then
+                --entityModel.Name = config.CustomName
+            --end
 
             entityModel:SetAttribute("IsCustomEntity", true)
             entityModel:SetAttribute("NoAI", false)
@@ -275,7 +275,7 @@ Spawner.runEntity = function(entityTable)
                         
                         task.spawn(entityTable.Debug.OnDeath)
                         Hum.Health = 0
-                        ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityModel.Name
+                        --ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityModel.Name
                         
                         if #entityTable.Config.CustomDialog > 0 then
                             firesignal(ReSt.Bricks.DeathHint.OnClientEvent, entityTable.Config.CustomDialog)
